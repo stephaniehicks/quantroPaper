@@ -10,8 +10,8 @@ The additional materials (R code and scripts) for the paper *When to use Quantil
 
 These are the R-packages (static) used in the analysis for the paper (Supplementary Material Sections 1 and 3). 
 
-* [quantro_0.99.1.tar.gz](): Most recent version available on [Bioconductor](http://www.bioconductor.org/packages/release/bioc/html/quantro.html)
-* [quantroSim_0.0.1.tar.gz](): Most recent version available on [Github](https://github.com/stephaniehicks/quantroSim)
+* [quantro_0.99.1.tar.gz](https://github.com/stephaniehicks/quantroPaper/raw/master/Rpkgs/quantro_0.99.1.tar.gz): Most recent version available on [Bioconductor](http://www.bioconductor.org/packages/release/bioc/html/quantro.html)
+* [quantroSim_0.0.1.tar.gz](https://github.com/stephaniehicks/quantroPaper/raw/master/Rpkgs/quantroSim_0.0.1.tar.gz): Most recent version available on [Github](https://github.com/stephaniehicks/quantroSim)
 
 
 # Scripts
