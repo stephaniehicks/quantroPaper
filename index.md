@@ -1,6 +1,6 @@
 ---
 layout: page
-title: quantro: 
+title: quantro
 tagline: Additional Materials and Scripts
 ---
 
@@ -21,10 +21,12 @@ These are the R-packages (static) used in the analysis for the paper (Supplement
 For a description of all the data used, see Table 1 in the [Supplementary Material](). 
 
 Gene expression (RNA-Seq)
+
 * [pickrellRNASeq]()
 * [mouseStrainsRNASeq]()
 
 Gene expression (Microarrays)
+
 * [alveolarSmokingAffyData]()
 * [lungCOPDAffyData]()
 * [brainParkinsonsAffyData]()
@@ -39,6 +41,7 @@ Gene expression (Microarrays)
 * [mycAffyData]()
 
 DNA methylation (Microarrays)
+
 * [adiposeExerciseMethyl]()
 * [pancreaticT2DMethyl]()
 * [cellcompMethyl]()
