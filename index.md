@@ -44,7 +44,7 @@ Gene expression (Microarrays)
 
 DNA methylation (Microarrays)
 
-* [adiposeExerciseMethyl]()
+* [adiposeExerciseMethyl](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/dnaMethylation/adiposeExerciseMethyl.Rmd)
 * [pancreaticT2DMethyl]()
 * [cellcompMethyl]()
 
