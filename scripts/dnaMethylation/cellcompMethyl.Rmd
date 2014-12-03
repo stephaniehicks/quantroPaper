@@ -1,0 +1,41 @@
+Analysis of `cellcompMethyl` 
+========================================================
+
+This data set is available as an `RGChannelSet` in an R/Bioconductor package titled `FlowSorted.Blood.450k` which can be found  
+[on Bioconductor](http://www.bioconductor.org/packages/release/data/experiment/html/FlowSorted.Blood.450k.html). 
+
+### Load libraries
+```{r, message=FALSE}
+library(minfi)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+### Load `FlowSorted.Blood.450k`
+```{r}
+library(FlowSorted.Blood.450k)
+cellcompMethyl <- preprocessIllumina(updateObject(FlowSorted.Blood.450k))
+p <- getBeta(cellcompMethyl, type = "Illumina")
+pd = as.data.frame(pData(cellcompMethyl))
+
+IDs = c("CD8T","CD4T", "NK","Bcell","Mono","Gran")
+p0 = p[,which(pd$CellType %in% IDs)]; pd0 = pd[which(pd$CellType %in% IDs),]
+
+p0 = p0[,-which(pd0$Sample_Name == "CD8+_105")]
+pd0 = pd0[-which(pd0$Sample_Name == "CD8+_105"),]
+```
+
+
+Density and Boxplots of the raw beta values:  
+```{r}
+matdensity(p0, groupFactor = pd0$CellType, col = 1:6, xlab = expression("beta values"), ylab = "density")
+
+matboxplot(p0, groupFactor = pd0$CellType, col = c(1:6), ylab = expression("beta values"), range = 0, xaxt="n")
+```
+
+
+### Testing for global differences
+```{r}
+quantro(p0, groupFactor = pd0$CellType, B=1000)
+```
