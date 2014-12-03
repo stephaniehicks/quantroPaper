@@ -1,0 +1,57 @@
+Analysis of `pancreaticT2DMethyl` from Dayeh et al. (2014)
+========================================================
+
+### Load libraries
+```{r, message=FALSE}
+library(minfi)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+### Create `pancreaticT2DMethyl` data set
+```{r}
+# Load text files
+control <- read.table("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/t2d_islets_control_data_intensities.txt", sep = "\t", header = TRUE)
+
+tmpfile <- tempfile()
+tmpdir <- tempdir()
+download.file("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/t2d_islets_signal_intensities.txt.zip",tmpfile)
+filenames <- unzip(tmpfile,list=TRUE) ## this shows the files
+signal <- read.table(unzip(tmpfile,files="t2d_islets_signal_intensities.txt",exdir=tmpdir), sep = "\t", header = TRUE)
+
+phDat <- read.table("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/t2d_islets_sample_info.txt", sep = "\t", header = TRUE)
+pd <- data.frame("Sample_Name" = paste("Sample", 1:49, sep="_"),
+                 "Group" = as.factor(ifelse(phDat$T2D == 1, "T2D", "non-diabetic")))
+
+# Create meth, unmeth, pData  objects
+meth <- as.matrix(signal[, c(seq(5, 148, by=3), 3)])
+colnames(meth) <- pd$Sample_Name
+unmeth <- as.matrix(signal[, c(seq(6, 148, by=3), 4)])
+colnames(unmeth) <- pd$Sample_Name
+rownames(pd) <- colnames(meth)
+
+# Create MethylSet
+library(minfi)
+pancreaticT2DMethyl <- MethylSet(Meth = meth, Unmeth = unmeth,
+                                 phenoData = AnnotatedDataFrame(pd))
+```
+
+### Load `pancreaticT2DMethyl`
+```{r}
+p <- getBeta(pancreaticT2DMethyl, type = "Illumina")
+pd <- pData(pancreaticT2DMethyl)
+```
+
+
+Density and Boxplots of the raw beta values:  
+```{r}
+matdensity(p, groupFactor = pd$Group, col = c(2,3), xlab = expression("beta values"), ylab = "density")
+
+matboxplot(p, groupFactor = pd$Group, col = c(2,3), ylab = expression("beta values"), range = 0, xaxt="n")
+```
+
+### Testing for global differences
+```{r}
+quantro(p, groupFactor = pd$Group, B=1000)
+```
