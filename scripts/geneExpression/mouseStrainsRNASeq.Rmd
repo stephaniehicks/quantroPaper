@@ -51,7 +51,7 @@ legend('topright', levels(pd$strain), col = c(2,3), lty = 1, lwd = 3)
 ### Testing for global differences
 
 ```{r}
-qFit <- quantro(rld.mat, groupFactor = pd$, B=1000)
+qFit <- quantro(rld.mat, groupFactor = pd$strain, B=1000)
 qFit
 ```
 
