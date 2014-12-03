@@ -1,0 +1,78 @@
+Analysis of `pickellRNASeq`
+========================================================
+
+### Load libraries
+```{r, message=FALSE}
+library(Biobase)
+library(biomaRt)
+library(DESeq2)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+
+
+### Load `pickellRNASeq`
+
+```{r}
+montpick.local <- load("data/montpick_eset.RData")
+phenoData(montpick.eset) # gives information about the table
+```
+
+Create the RNA-Seq count table (ExpressionSet) and phenoDat. Subset for only YRI samples. 
+```{r}
+eset <- exprs(montpick.eset)
+pd <- phenoData(montpick.eset)@data
+pdYRI <- pd[which(pd$population == "YRI"), ]
+esetYRI <- eset[,which(pd$population == "YRI")]
+head(pdYRI)
+```
+
+Remove all the rows with zeros across all the samples in YRI
+```{r}
+keepMeID <- sapply(1:nrow(esetYRI), function(x){ any(esetYRI[x,] != 0) })
+esetNoZerosYRI <- esetYRI[keepMeID,]
+```
+
+Import the eQTL rs7639979 from the Pickrell et al. (2012) paper
+```{r}
+eQTL_YRI_rs7639979 <- read.table(file="data/eQTL_YRI_rs7639979.txt", header = TRUE)
+YRIgeno <- eQTL_YRI_rs7639979[match(colnames(esetNoZerosYRI), eQTL_YRI_rs7639979$SampleID),2]
+table(YRIgeno)
+```
+
+Remove the NN genotype
+```{r}
+pdYRI$Genotype <- YRIgeno
+esetNoZerosYRI <- esetNoZerosYRI[, which(pdYRI$Genotype != "NN")]
+pdYRI <- pdYRI[which(pdYRI$Genotype != "NN"), ]
+pdYRI$Genotype <- factor(pdYRI$Genotype, levels = c("GG", "AG", "AA"))
+```
+
+
+To adjust for sequence depth, we use the `rlogTransformation()` in `DESeq2`. 
+```{r, eval=FALSE}
+dds <- DESeqDataSetFromMatrix(countData = esetNoZerosYRI, colData = pdYRI, design = ~ 1)
+rldYRI <- rlogTransformation(dds)
+rldYRI.mat <- as.matrix(assay(rldYRI))
+```
+
+```{r, fig.width=10}
+matdensity(rldYRI.mat, col = 1 + as.integer(pdYRI$Genotype), main = "rlogTransformation")
+legend('topright', c("GG", "AG", "AA"), col = 2:4, lty = 1, lwd = 3)
+matboxplot(rldYRI.mat, pdYRI, main = "rlogTransformation")
+legend('topright', c("GG", "AG", "AA"), col = 2:4, lty = 1, lwd = 3)
+```
+
+
+### Testing for global differences
+
+```{r}
+qFit <- quantro(rldYRI.mat, groupFactor = pdYRI$Genotype, B=1000)
+qFit
+```
+
+
+
+

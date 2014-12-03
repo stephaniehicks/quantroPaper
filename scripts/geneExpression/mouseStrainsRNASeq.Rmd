@@ -1,0 +1,57 @@
+Analysis of `mouseStrainsRNASeq`
+========================================================
+
+### Load libraries
+```{r, message=FALSE}
+library(Biobase)
+library(biomaRt)
+library(DESeq2)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+
+### Load `mouseStrainsRNASeq`
+
+```{r}
+bottomly.local <- load("data/bottomly_eset.RData")
+pData(bottomly.eset) # gives information about the table
+```
+
+
+Create the RNA-Seq count table (ExpressionSet) and phenoDat.
+```{r}
+eset <- exprs(bottomly.eset)
+pd <- phenoData(bottomly.eset)@data
+head(pd)
+```
+
+Remove all the rows with zeros across all the samples
+```{r}
+keepMeID <- sapply(1:nrow(eset), function(x){ any(eset[x,] != 0) })
+esetNoZeros <- eset[keepMeID,]
+```
+
+
+To adjust for sequence depth, we use the `rlogTransformation()` in `DESeq2`. 
+```{r}
+dds <- DESeqDataSetFromMatrix(countData = esetNoZeros, colData = pd, design = ~ 1)
+rld <- rlogTransformation(dds)
+rld.mat <- as.matrix(assay(rld))
+```
+
+```{r, fig.width=10}
+matdensity(rld.mat, col = 1 + as.integer(pd$strain), main = "rlogTransformation")
+legend('topright', levels(pd$strain), col = c(2,3), lty = 1, lwd = 3)
+matboxplot(rld.mat, pd, main = "rlogTransformation", range = 0, xaxt = "n")
+legend('topright', levels(pd$strain), col = c(2,3), lty = 1, lwd = 3)
+```
+
+### Testing for global differences
+
+```{r}
+qFit <- quantro(rld.mat, groupFactor = pd$, B=1000)
+qFit
+```
+

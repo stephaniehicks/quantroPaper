@@ -1,0 +1,70 @@
+Analysis of `mycAffyData` from Loven et al. (2012)
+========================================================
+
+
+### Load libraries
+
+```{r, message=FALSE}
+library(affy)
+library(gplots)
+library(doParallel)
+registerDoParallel(cores=20)
+library(quantro)
+```
+
+### Load `mycAffyData`
+
+To install the `mycAffyData` from Github, use the `devtools` package. The `mycAffyData` contains the affyBatch created from the CEL files.
+```{r, eval=FALSE}
+library(devtools)
+install_github("mycAffyData", username = "stephaniehicks")
+```
+
+Load the `mycAffyData` package which contains the `mycData` affyBatch object. 
+```{r}
+library(mycAffyData)
+data(mycData)
+sampleNames(protocolData(mycData)) <- sampleNames(mycData)
+```
+
+
+### Testing for global differences
+
+```{r, message=FALSE, warning=FALSE}
+pd <- pData(mycData)
+pd$Group <- c("low-Myc", "low-Myc", "high-Myc", "high-Myc")
+pd$Sample_Name <- sampleNames(mycData)
+pmMat = pm(mycData)
+colnames(pmMat) <- pd$Sample_Name
+qFit = quantro(pmMat, groupFactor = pd$Group, B=1000)
+qFit
+```
+
+
+
+# Expression (original scale) based on spikeins
+```{r}
+library(mycAffyData)
+data(mycData)
+probesetName <- featureNames(mycData) # ProbeSet names
+probesName <- probeNames(mycData) # Probe names
+pmMat <- pm(mycData)
+
+# Extract the spike-in ProbeSet names (n=100)
+ERCCind <- grep("ERCC", probeNames(mycData))
+pmMatERCC <- pmMat[ERCCind,]
+rowIDs <- match(rownames(pmMatERCC), rownames(pmMat))
+```
+
+#### Normalize with log2(e) - log2(colMeans(e[ERCCind]))
+```{r, fig.height=5, fig.width=10}
+pmMatAdj <- sweep(log2(pmMat), 2, colMeans(log2(pmMatERCC)), FUN="-")
+
+par(mfrow=c(1,2))
+matdensity(log2(pmMat), col = c(2,2,3,3))
+legend('topright', c("low-Myc", "high-Myc"), lty = 1, col = c(2,3), lwd = 2)
+
+matdensity(pmMatAdj, col = c(2,2,3,3))
+legend('topright', c("low-Myc", "high-Myc"), lty = 1, col = c(2,3), lwd = 2)
+```
+
