@@ -1,4 +1,4 @@
-Analysis of `pickellRNASeq`
+Analysis of `pickrellRNASeq`
 ========================================================
 
 ### Load libraries
@@ -13,7 +13,7 @@ registerDoParallel(cores=20)
 
 
 
-### Load `pickellRNASeq`
+### Load `pickrellRNASeq`
 
 ```{r}
 montpick.local <- load("data/montpick_eset.RData")
