@@ -24,8 +24,8 @@ In this section, we apply `quantro` to several gene expression and DNA methylati
 
 Gene expression (RNA-Seq)
 
-* [pickrellRNASeq]()
-* [mouseStrainsRNASeq]()
+* [pickrellRNASeq](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/pickrellRNASeq.Rmd)
+* [mouseStrainsRNASeq](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/mouseStrainsRNASeq.Rmd)
 
 Gene expression (Microarrays)
 
@@ -40,7 +40,7 @@ Gene expression (Microarrays)
 * [stomachCancerAffyData]()
 * [liverCancerAffyData]()
 * [liverNAFLDAffyData]()
-* [mycAffyData]()
+* [mycAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/mycAffyData.Rmd)
 
 DNA methylation (Microarrays)
 
