@@ -1,14 +1,17 @@
 library(quantro)
-library(epigenomeSim)
+library(quantroSim)
+library(minfi)
 library(genefilter)
 library(preprocessCore)
 library(doParallel)
 library(abind)
+library(ggplot2)
+library(dplyr)
 
 source("quantro-functions.R")
 
 ###########################################
-### Simulation study: DNA Methylation: FDR plots
+### Simulation study: FDR plots
 ###########################################
 
 # Set essential simulation scenario parameters
@@ -75,6 +78,7 @@ dat = data.frame("mean" = c(rowMeans(z1), rowMeans(z2)),
                  "nSelected" = rep(seq_len(nDiffs),2))         
 x = dat %>% group_by(Normalization) %>% summarise(max = round(mean[max(nSelected)]))
 
+# Create plot using ggplot2
 ggplot(dat, aes(x=nSelected, y=mean, color = Normalization)) + 
     geom_line(size = 1) + 
     xlab("Number of Top Probes Selected") + 

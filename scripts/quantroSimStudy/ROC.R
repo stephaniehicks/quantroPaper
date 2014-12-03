@@ -5,11 +5,13 @@ library(genefilter)
 library(preprocessCore)
 library(doParallel)
 library(abind)
+library(ggplot2)
+library(dplyr)
 
 source("quantro-functions.R")
 
 ###########################################
-### Simulation study: DNA Methylation: ROC Plot
+### Simulation study: ROC Plot
 ###########################################
 
 # Set essential simulation scenario parameters
@@ -106,7 +108,7 @@ pAUC <- function(fpr, tpr, lower=0, upper=1){
 x = dat %>% group_by(Normalization) %>% summarise(pAUC = pAUC(FPR, TPR, upper = 0.25))
 x$pAUC <- round(x$pAUC, 3)
 
-# Plot ROC curves
+# Create plot using ggplot2
 ggplot(dat, aes(x=FPR, y=TPR, color = Normalization)) + 
     geom_line(size =1) + xlab("False Positive Rate") + 
     ylab("True Positive Rate") + xlim(0, 0.25) +

@@ -1,11 +1,18 @@
 library(quantro)
-library(epigenomeSim)
+library(quantroSim)
+library(minfi)
 library(genefilter)
-library(abind)
 library(preprocessCore)
 library(doParallel)
+library(abind)
+library(ggplot2)
+library(dplyr)
 
 source("quantro-functions.R")
+
+###########################################
+### Simulation study: Bias and MSE
+###########################################
 
 # Set essential simulation scenario parameters
 nMol = 1e6
@@ -15,7 +22,7 @@ nG = 2
 totS = nS * nG
 N = 1000
 nCores = 5
-pDiffs = runif(N, 0.002, 0.08)
+pDiffs = runif(N, 0.001, 0.08)
 nDiffs = nMethProbes * pDiffs
 pUp = 0.80
 magTechVar <- c(.1, 1)
