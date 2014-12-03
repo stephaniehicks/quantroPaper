@@ -26,7 +26,6 @@ nDiffs = nMethProbes * pDiffs
 siga = sigb = 1 * diag(totS)
 nCores = 10
 
-acomb <- function(...) abind(..., along=3)
 registerDoParallel(cores = nCores)
 workers <- getDoParWorkers()
 backend <- getDoParName()

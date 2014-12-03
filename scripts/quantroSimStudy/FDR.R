@@ -26,7 +26,6 @@ siga = sigb = 1 * diag(totS)
 N = 100
 nCores = 5
 
-acomb <- function(...) abind(..., along=3)
 registerDoParallel(cores = nCores)
 workers <- getDoParWorkers()
 backend <- getDoParName()
