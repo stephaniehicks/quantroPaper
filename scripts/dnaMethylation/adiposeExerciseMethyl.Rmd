@@ -32,6 +32,7 @@ colnames(unmeth) <- pd$Sample_Name
 rownames(pd) <- colnames(meth)
 
 # Create MethylSet
+library(minfi)
 adiposeExerciseMethyl <- MethylSet(Meth = meth, Unmeth = unmeth, 
                                    phenoData = AnnotatedDataFrame(pd))
 ```
@@ -44,8 +45,6 @@ unmeth <- getUnmeth(adiposeExerciseMethyl)
 p <- getBeta(adiposeExerciseMethyl, type = "Illumina")
 pd <- pData(adiposeExerciseMethyl)
 
-meth <- meth[,1:46]
-unmeth <- unmeth[,1:46]
 p <- p[,1:46]
 pd <- pd[1:46,]
 ```
@@ -53,10 +52,9 @@ pd <- pd[1:46,]
 
 Density and Boxplots of the raw beta values: 
 ```{r}
-matdensity(p, col = 1 + as.integer(pd$Group), lwd = 2, xlab = expression("beta values"), ylab = "density")
-legend('top', levels(pd$Group), lty = 1, col = c(2,3), lwd = 3)
+matdensity(p, groupFactor = pd$Group, col = c(2,3), lwd = 2, xlab = expression("beta values"), ylab = "density")
 
-matboxplot(p, pd, ylab = expression("beta values"), range = 0, xaxt="n")
+matboxplot(p, groupFactor = pd$Group, ylab = expression("beta values"), range = 0, xaxt="n")
 ```
 
 
