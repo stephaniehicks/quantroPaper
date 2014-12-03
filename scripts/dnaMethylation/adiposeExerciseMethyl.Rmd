@@ -1,0 +1,66 @@
+Analysis of `adiposeExerciseMethyl`
+========================================================
+
+### Load libraries
+```{r, message=FALSE}
+library(minfi)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+### Create `adiposeExerciseMethyl` data set
+```{r}
+# Load text files
+control <- read.table("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/exercise_control_data.txt", sep = "\t", header = TRUE)
+
+tmpfile <- tempfile()
+tmpdir <- tempdir()
+download.file("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/exercise_raw_data.txt.zip",tmpfile)
+filenames <- unzip(tmpfile,list=TRUE) ## this shows the files
+signal <- read.delim(unzip(tmpfile,files="exercise_raw_data.txt",exdir=tmpdir), fileEncoding="UCS-2LE", header = TRUE)
+
+phDat <- read.delim("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/exercise_sample_description.txt", fileEncoding="UCS-2LE", header = TRUE)
+pd <- data.frame("Sample_Name" = paste("Sample", 1:54, sep="_"),
+                 "Group" = as.factor(phDat$characteristics.before.or.after.exercise.intervention))
+
+# Create meth, unmeth, pData  objects
+meth <- as.matrix(signal[, seq(3, 163, by=3)])
+colnames(meth) <- pd$Sample_Name
+unmeth <- as.matrix(signal[, seq(2, 163, by=3)])
+colnames(unmeth) <- pd$Sample_Name
+rownames(pd) <- colnames(meth)
+
+# Create MethylSet
+adiposeExerciseMethyl <- MethylSet(Meth = meth, Unmeth = unmeth, 
+                                   phenoData = AnnotatedDataFrame(pd))
+```
+
+### Load `adiposeExerciseMethyl`
+Load MethylSet and subset to include men only the 23 men with before AND after 6 months
+```{r}
+meth <- getMeth(adiposeExerciseMethyl)
+unmeth <- getUnmeth(adiposeExerciseMethyl)
+p <- getBeta(adiposeExerciseMethyl, type = "Illumina")
+pd <- pData(adiposeExerciseMethyl)
+
+meth <- meth[,1:46]
+unmeth <- unmeth[,1:46]
+p <- p[,1:46]
+pd <- pd[1:46,]
+```
+
+
+Density and Boxplots of the raw beta values: 
+```{r}
+matdensity(p, col = 1 + as.integer(pd$Group), lwd = 2, xlab = expression("beta values"), ylab = "density")
+legend('top', levels(pd$Group), lty = 1, col = c(2,3), lwd = 3)
+
+matboxplot(p, pd, ylab = expression("beta values"), range = 0, xaxt="n")
+```
+
+
+### Testing for global differences
+```{r}
+quantro(p, groupFactor = pd$Group, B=1000)
+```
