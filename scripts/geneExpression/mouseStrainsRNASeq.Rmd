@@ -15,7 +15,7 @@ registerDoParallel(cores=20)
 ### Load `mouseStrainsRNASeq`
 
 ```{r}
-bottomly.local <- load("data/bottomly_eset.RData")
+bottomly.local <- load(url("http://bowtie-bio.sourceforge.net/recount/ExpressionSets/bottomly_eset.RData"))
 pData(bottomly.eset) # gives information about the table
 ```
 

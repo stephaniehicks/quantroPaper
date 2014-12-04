@@ -16,7 +16,7 @@ registerDoParallel(cores=20)
 ### Load `pickrellRNASeq`
 
 ```{r}
-montpick.local <- load("data/montpick_eset.RData")
+montpick.local <- load(url("http://bowtie-bio.sourceforge.net/recount/ExpressionSets/montpick_eset.RData"))
 phenoData(montpick.eset) # gives information about the table
 ```
 
