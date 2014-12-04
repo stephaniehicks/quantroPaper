@@ -40,7 +40,7 @@ Gene expression (RNA-Seq)
 
 Gene expression (Microarrays)
 
-* [alveolarSmokingAffyData]()
+* [alveolarSmokingAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/alveolarSmokingAffyData.Rmd)
 * [lungCOPDAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/lungCOPDAffyData.Rmd)
 * [brainParkinsonsAffyData]()
 * [brainLiverAffyData]()
@@ -50,7 +50,7 @@ Gene expression (Microarrays)
 * [thyroidCancerAffyData]()
 * [stomachCancerAffyData]()
 * [liverCancerAffyData]()
-* [liverNAFLDAffyData]()
+* [liverNAFLDAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/liverNAFLDAffyData.Rmd)
 * [mycAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/mycAffyData.Rmd)
 
 DNA methylation (Microarrays)
