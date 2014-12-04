@@ -1,0 +1,55 @@
+Analysis of `alveolarSmokingAffyData`
+========================================================
+
+### Load libraries
+```{r, message=FALSE}
+library(affy)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+### Create `alveolarSmokingAffyData` data set
+```{r, message=FALSE}
+library(GEOquery)
+gds <- getGEO("GSE2125")
+
+setwd("~/Downloads/GSE2125_RAW")
+rawFiles <- as.character(pData(gds[[1]])$supplementary_file)
+filePath <- sapply(1:length(rawFiles), function(x){ substring(rawFiles[x], 81) })
+
+# Read in CEL files
+alveolarSmokingAffyData <- ReadAffy()
+
+# Create phenoData
+pd  <- pData(gds[[1]])
+pd$Sample_Name <- sampleNames(alveolarSmokingAffyData)
+pd$Group <- factor(substring(pd$characteristics_ch1, 9), levels = c("Nonsmoker", "Smoker", "Asthmatic"))
+pData(alveolarSmokingAffyData) <- pd
+```
+
+Subset phenoDat dataframe
+```{r}
+pd <- pd[,c(1,2,8,35,36)]
+head(pd)
+```
+
+
+### Extract the PM values
+```{r}
+pmMat <- pm(alveolarSmokingAffyData)
+```
+
+Density and boxplots of the raw PM values 
+```{r}
+log2pmMat <- log2(pmMat)
+matdensity(log2pmMat, groupFactor = pd$Group, col = 2:4, expression("log"[2]~"PM values"), ylab = "density")
+matboxplot(log2pmMat, groupFactor = pd$Group, col = 2:4, ylab = expression("log"[2]~"PM values"))
+```
+
+### Testing for global differences
+```{r}
+quantro(pmMat, groupFactor = pd$Group, B=1000)
+```
+
+
