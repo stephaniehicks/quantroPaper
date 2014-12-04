@@ -1,0 +1,65 @@
+Analysis of `lungCOPDAffyData`
+========================================================
+
+### Load libraries
+```{r, message=FALSE}
+library(affy)
+library(oligo)
+library(gplots)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+### Create `lungCOPDAffyData` data set
+```{r, message=FALSE}
+library(GEOquery)
+library(pd.hugene.1.0.st.v1)
+gds <- getGEO("GSE37147")
+
+setwd("~/Downloads/GSE37147_RAW")
+rawFiles <- as.character(pData(gds[[1]])$supplementary_file)
+filePath <- sapply(1:length(rawFiles), function(x){ substring(rawFiles[x], 83) })
+
+# Read in CEL files
+lungCOPDAffyDat <- read.celfiles(filePath)
+
+# Create phenoData
+pd  <- pData(gds[[1]])
+pd$Sample_Name <- sampleNames(lungCOPDAffyData)
+
+pd$COPD <- ifelse(pd$characteristics_ch1.4 == "copd: yes", "COPD", ifelse(pd$characteristics_ch1.4 == "copd: no", "No COPD", NA))
+pd$smoker <- ifelse(pd$characteristics_ch1.6 == "smoking status: current smoker (CS)", "current smoker", ifelse(pd$characteristics_ch1.6 == "smoking status: ex-smoker (EX)", "ex-smoker", NA))
+pd$gender <- ifelse(pd$characteristics_ch1.7 == "Sex: M", "male", ifelse(pd$characteristics_ch1.7 == "Sex: F", "female", NA))
+pd$asthma <- ifelse(pd$characteristics_ch1.9 == "history of asthma: no", "no asthma", "asthma")
+pd$medsInhaled <- ifelse(pd$characteristics_ch1.10 == "inhaled medications: no", "no inhaled meds", "inhaled meds")
+
+pd <- pd[!is.na(pd$COPD),]
+pd$COPD <- factor(pd$COPD, levels = c("COPD", "No COPD"))
+pData(lungCOPDAffyData) <- pd
+```
+
+Subset phenoDat dataframe columns
+```{r}
+pd <- pd[,c(1:5,8:11, 45:50)]
+pd$Group <- pd$COPD
+head(pd)
+```
+
+### Extract the PM values
+```{r}
+pmMat <- pm(lungCOPDAffyData)
+pmMat <- pmMat[,match(pd$Sample_Name, colnames(pmMat))]
+```
+
+Density and boxplots of the raw PM values
+```{r}
+log2pmMat <- log2(pmMat)
+matdensity(log2pmMat, groupFactor = pd$Group, col = 2:5, expression("log"[2]~"PM values"), ylab = "density")
+matboxplot(log2pmMat, groupFactor = pd$Group, col = 2:5, ylab = expression("log"[2]~"PM values"))
+```
+
+### Testing for global differences
+```{r}
+quantro(pmMat, groupFactor = pd$Group, B=1000)
+```
