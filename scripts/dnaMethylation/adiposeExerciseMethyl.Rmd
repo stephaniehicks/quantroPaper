@@ -12,8 +12,6 @@ registerDoParallel(cores=20)
 ### Create `adiposeExerciseMethyl` data set
 ```{r}
 # Load text files
-control <- read.table("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/exercise_control_data.txt", sep = "\t", header = TRUE)
-
 tmpfile <- tempfile()
 tmpdir <- tempdir()
 download.file("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/exercise_raw_data.txt.zip",tmpfile)
@@ -24,7 +22,7 @@ phDat <- read.delim("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www
 pd <- data.frame("Sample_Name" = paste("Sample", 1:54, sep="_"),
                  "Group" = as.factor(phDat$characteristics.before.or.after.exercise.intervention))
 
-# Create meth, unmeth, pData  objects
+# Create meth, unmeth and phenoData objects
 meth <- as.matrix(signal[, seq(3, 163, by=3)])
 colnames(meth) <- pd$Sample_Name
 unmeth <- as.matrix(signal[, seq(2, 163, by=3)])
@@ -37,11 +35,10 @@ adiposeExerciseMethyl <- MethylSet(Meth = meth, Unmeth = unmeth,
                                    phenoData = AnnotatedDataFrame(pd))
 ```
 
-### Load `adiposeExerciseMethyl`
-Load MethylSet and subset to include men only the 23 men with before AND after 6 months
+
+### Extract beta values
+Extract beta values from `MethylSet` and only include men only the 23 men with before and after 6 months of exercise
 ```{r}
-meth <- getMeth(adiposeExerciseMethyl)
-unmeth <- getUnmeth(adiposeExerciseMethyl)
 p <- getBeta(adiposeExerciseMethyl, type = "Illumina")
 pd <- pData(adiposeExerciseMethyl)
 
@@ -50,11 +47,10 @@ pd <- pd[1:46,]
 ```
 
 
-Density and Boxplots of the raw beta values: 
+Density and boxplots of the raw beta values: 
 ```{r}
-matdensity(p, groupFactor = pd$Group, col = c(2,3), lwd = 2, xlab = expression("beta values"), ylab = "density")
-
-matboxplot(p, groupFactor = pd$Group, ylab = expression("beta values"), range = 0, xaxt="n")
+matdensity(p, groupFactor = pd$Group, col = 2:3, xlab = "beta values", ylab = "density")
+matboxplot(p, groupFactor = pd$Group, col = 2:3, ylab = "beta values")
 ```
 
 
