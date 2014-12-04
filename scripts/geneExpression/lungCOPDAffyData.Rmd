@@ -11,7 +11,7 @@ registerDoParallel(cores=20)
 ```
 
 ### Create `lungCOPDAffyData` data set
-```{r, message=FALSE, eval=FALSE}
+```{r, message=FALSE}
 library(GEOquery)
 library(pd.hugene.1.0.st.v1)
 gds <- getGEO("GSE37147")
@@ -41,12 +41,8 @@ pData(lungCOPDAffyData) <- pd
 save(lungCOPDAffyData, file="../../data/lungCOPDAffyData.rda")
 ```
 
-### Load `lungCOPDAffyData`
-Load `affyBatch` object and subset phenoDat dataframe columns
+Subset phenoDat dataframe columns
 ```{r}
-library(lungCOPDAffyData)
-data(lungCOPDAffyData)
-
 pd <- pData(lungCOPDAffyData)
 pd <- pd[,c(1:5,8:11, 45:50)]
 pd$Group <- pd$COPD
@@ -62,8 +58,8 @@ pmMat <- pmMat[,match(pd$Sample_Name, colnames(pmMat))]
 Density and boxplots of the raw PM values
 ```{r}
 log2pmMat <- log2(pmMat)
-matdensity(log2pmMat, groupFactor = pd$Group, col = 2:5, expression("log"[2]~"PM values"), ylab = "density")
-matboxplot(log2pmMat, groupFactor = pd$Group, col = 2:5, ylab = expression("log"[2]~"PM values"))
+matdensity(log2pmMat, groupFactor = pd$Group, col = 2:3, expression("log"[2]~"PM values"), ylab = "density")
+matboxplot(log2pmMat, groupFactor = pd$Group, col = 2:3, ylab = expression("log"[2]~"PM values"))
 ```
 
 ### Testing for global differences
