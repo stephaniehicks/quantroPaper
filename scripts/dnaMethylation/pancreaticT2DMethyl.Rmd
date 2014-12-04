@@ -1,4 +1,4 @@
-Analysis of `pancreaticT2DMethyl` from Dayeh et al. (2014)
+Analysis of `pancreaticT2DMethyl`
 ========================================================
 
 ### Load libraries
@@ -12,8 +12,6 @@ registerDoParallel(cores=20)
 ### Create `pancreaticT2DMethyl` data set
 ```{r}
 # Load text files
-control <- read.table("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/t2d_islets_control_data_intensities.txt", sep = "\t", header = TRUE)
-
 tmpfile <- tempfile()
 tmpdir <- tempdir()
 download.file("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www/documents/t2d_islets_signal_intensities.txt.zip",tmpfile)
@@ -24,7 +22,7 @@ phDat <- read.table("http://www.ludc.med.lu.se/fileadmin/group_upload/gid_35/www
 pd <- data.frame("Sample_Name" = paste("Sample", 1:49, sep="_"),
                  "Group" = as.factor(ifelse(phDat$T2D == 1, "T2D", "non-diabetic")))
 
-# Create meth, unmeth, pData  objects
+# Create meth, unmeth and phenoData objects
 meth <- as.matrix(signal[, c(seq(5, 148, by=3), 3)])
 colnames(meth) <- pd$Sample_Name
 unmeth <- as.matrix(signal[, c(seq(6, 148, by=3), 4)])
@@ -37,7 +35,8 @@ pancreaticT2DMethyl <- MethylSet(Meth = meth, Unmeth = unmeth,
                                  phenoData = AnnotatedDataFrame(pd))
 ```
 
-### Load `pancreaticT2DMethyl`
+### Extract beta values
+Extract beta values from `MethylSet`
 ```{r}
 p <- getBeta(pancreaticT2DMethyl, type = "Illumina")
 pd <- pData(pancreaticT2DMethyl)
@@ -46,9 +45,8 @@ pd <- pData(pancreaticT2DMethyl)
 
 Density and Boxplots of the raw beta values:  
 ```{r}
-matdensity(p, groupFactor = pd$Group, col = c(2,3), xlab = expression("beta values"), ylab = "density")
-
-matboxplot(p, groupFactor = pd$Group, col = c(2,3), ylab = expression("beta values"), range = 0, xaxt="n")
+matdensity(p, groupFactor = pd$Group, col = 2:3, xlab = "beta values", ylab = "density")
+matboxplot(p, groupFactor = pd$Group, col = 2:3, ylab = "beta values")
 ```
 
 ### Testing for global differences
