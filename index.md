@@ -41,7 +41,7 @@ Gene expression (RNA-Seq)
 Gene expression (Microarrays)
 
 * [alveolarSmokingAffyData]()
-* [lungCOPDAffyData]()
+* [lungCOPDAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/lungCOPDAffyData.Rmd)
 * [brainParkinsonsAffyData]()
 * [brainLiverAffyData]()
 * [lungCancerAffyData]()
