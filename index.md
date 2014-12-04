@@ -42,7 +42,7 @@ Gene expression (Microarrays)
 
 * [alveolarSmokingAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/alveolarSmokingAffyData.Rmd)
 * [lungCOPDAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/lungCOPDAffyData.Rmd)
-* [brainParkinsonsAffyData]()
+* [brainParkinsonsAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/brainParkinsonsAffyData.Rmd)
 * [brainLiverAffyData]()
 * [lungCancerAffyData]()
 * [breastCancerAffyData]()
