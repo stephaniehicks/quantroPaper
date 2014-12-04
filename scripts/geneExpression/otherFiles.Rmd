@@ -1,0 +1,23 @@
+This Rmarkdown file contains the code for the other seven analyses in Table 1 of the Supplementary Material.  The first step is to download the raw CEL files from GEO for each of the following data sets. 
+
+Name of data set | GEO accession ID
+--- | --- 
+`brainLiverAffyData` | GSE17612, GSE21935, GSE14668, GSE29721, GSE38941
+`lungCancerAffyData` | GSE18842, GSE19188, GSE19804, GSE10445, GSE12667, GSE2109
+`breastCancerAffyData` | GSE10780, GSE10810, GSE29431, GSE30010, GSE2109, GSE5460, GSE653, GSE9195
+`prostateCancerAffyData` | GSE17951, GSE32448, GSE2109
+`thyroidCancerAffyData` | GSE29265, GSE33630, GSE2109
+`stomachCancerAffyData` | GSE13911, GSE2109
+`liverCancerAffyData` | GSE14668, GSE29721, GSE38941, GSE2109, GSE9829;GSE9843
+
+Once the raw CEL files have been downloaded, read them using `ReadAffy()` from the `affy` R/Bioconductor package and create an `AffyBatch` object. Extract the Perfect Match values using the `pm()` function and call the object `pmMat`. Extract the phenoData object and call it `pd` with a column titled `Group` containing the tumor / normal status for each sample. Test for global differences in the distributions using `quantro()` in the `quantro` R/Bioconductor package.  
+
+### Load libraries
+```{r, message=FALSE, eval=FALSE}
+library(quantro)
+```
+
+### Testing for global differences
+```{r, eval=FALSE}
+quantro(pmMat, groupFactor = pd$Group, B=1000)
+```
