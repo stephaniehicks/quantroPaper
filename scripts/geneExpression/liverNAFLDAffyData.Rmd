@@ -1,0 +1,57 @@
+Analysis of `liverNAFLDAffyData`
+========================================================
+
+### Load libraries
+```{r, message=FALSE}
+library(affy)
+library(oligo)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+### Create `liverNAFLDAffyData` data set
+```{r, message=FALSE}
+library(GEOquery)
+gds <- getGEO("GSE48452")
+
+setwd("~/Downloads/GSE48452_RAW")
+rawFiles <- as.character(pData(gds[[1]])$supplementary_file)
+filePath <- sapply(1:length(rawFiles), function(x){ substring(rawFiles[x], 85) })
+
+# Read in CEL files
+liverNAFLDAffyData <- read.celfiles(filePath)
+
+# Create phenoData
+pd  <- pData(gds[[1]])
+pd$Sample_Name <- colnames(pm(liverNAFLDAffyData))
+pd$Group <- sapply(1:length(rawFiles), function(x){ substring( pd$characteristics_ch1.1[x], 8)})
+pd$Group <- factor(pd$Group, levels = c("Control", "Healthy obese", "Steatosis", "Nash"))
+pData(liverNAFLDAffyData) <- pd
+```
+
+Subset phenoDat dataframe
+```{r}
+pd <- pData(liverNAFLDAffyData)
+pd <- pd[,c(1:5,13, 16:18, 47:48)]
+head(pd)
+```
+
+
+### Extract the PM values
+```{r}
+pmMat <- pm(liverNAFLDAffyData)
+```
+
+Density and boxplots of the raw PM values 
+```{r}
+log2pmMat <- log2(pmMat)
+matdensity(log2pmMat, groupFactor = pd$Group, col = 2:5, expression("log"[2]~"PM values"), ylab = "density")
+matboxplot(log2pmMat, groupFactor = pd$Group, col = 2:5, ylab = expression("log"[2]~"PM values"))
+```
+
+
+### Testing for global differences
+```{r}
+quantro(pmMat, groupFactor = pd$Group, B=1000)
+```
