@@ -12,7 +12,7 @@ The additional materials (R code and scripts) for the paper *When to use Quantil
 
 The `quantro` R/Bioconductor package is discussed in detail in the Supplementary Section 1 of the paper.   This package contains a data-driven test for global differences between groups of distributions which asses whether global normalization methods such as quantile normalization should be applied. 
 
-* [quantro_0.99.1.tar.gz](https://github.com/stephaniehicks/quantroPaper/raw/master/Rpkgs/quantro_0.99.1.tar.gz) (static)
+* [quantro_0.99.1.tar.gz](https://github.com/stephaniehicks/quantroPaper/raw/master/Rpkgs/quantro_0.99.1.tar.gz) (archived)
 * [quantro vignette](http://www.bioconductor.org/packages/release/bioc/vignettes/quantro/inst/doc/quantro-vignette.pdf)
 * Most recent version available on [Bioconductor](http://www.bioconductor.org/packages/release/bioc/html/quantro.html)
 
@@ -21,7 +21,7 @@ The `quantro` R/Bioconductor package is discussed in detail in the Supplementary
 
 The `quantroSim` R package is discussed in detail in the Supplementary Section 3 of the paper.  This is the supporting data simulation package for the `quantro` R/Bioconductor package which can be used to simulate gene expression and DNA methylation data. 
 
-* [quantroSim_0.0.1.tar.gz](https://github.com/stephaniehicks/quantroPaper/raw/master/Rpkgs/quantroSim_0.0.1.tar.gz) (static)
+* [quantroSim_0.0.1.tar.gz](https://github.com/stephaniehicks/quantroPaper/raw/master/Rpkgs/quantroSim_0.0.1.tar.gz) (archived)
 * [quantroSim vignette](https://github.com/stephaniehicks/quantroSim/raw/master/vignettes/quantroSim-vignette.pdf)
 * Most recent version available on [Github](https://github.com/stephaniehicks/quantroSim)
 
