@@ -1,8 +1,7 @@
 Analysis of `cellcompMethyl` 
 ========================================================
 
-This data set is available as an `RGChannelSet` in an R/Bioconductor package titled `FlowSorted.Blood.450k` which can be found  
-[on Bioconductor](http://www.bioconductor.org/packages/release/data/experiment/html/FlowSorted.Blood.450k.html). 
+This data set is available as a `RGChannelSet` in the `FlowSorted.Blood.450k` R/Bioconductor data package that can be found [on Bioconductor](http://www.bioconductor.org/packages/release/data/experiment/html/FlowSorted.Blood.450k.html). 
 
 ### Load libraries
 ```{r, message=FALSE}
@@ -15,7 +14,7 @@ registerDoParallel(cores=20)
 ### Load `FlowSorted.Blood.450k`
 ```{r}
 library(FlowSorted.Blood.450k)
-cellcompMethyl <- preprocessIllumina(updateObject(FlowSorted.Blood.450k))
+cellcompMethyl <- preprocessRaw(updateObject(FlowSorted.Blood.450k))
 p <- getBeta(cellcompMethyl, type = "Illumina")
 pd = as.data.frame(pData(cellcompMethyl))
 
@@ -29,9 +28,9 @@ pd0 = pd0[-which(pd0$Sample_Name == "CD8+_105"),]
 
 Density and Boxplots of the raw beta values:  
 ```{r}
-matdensity(p0, groupFactor = pd0$CellType, col = 1:6, xlab = expression("beta values"), ylab = "density")
+matdensity(p0, groupFactor = pd0$CellType, col = 1:6, xlab = "beta values", ylab = "density")
 
-matboxplot(p0, groupFactor = pd0$CellType, col = c(1:6), ylab = expression("beta values"), range = 0, xaxt="n")
+matboxplot(p0, groupFactor = pd0$CellType, col = 1:6, ylab = "beta values")
 ```
 
 
