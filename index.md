@@ -43,15 +43,10 @@ Gene expression (Microarrays)
 * [alveolarSmokingAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/alveolarSmokingAffyData.Rmd)
 * [lungCOPDAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/lungCOPDAffyData.Rmd)
 * [brainParkinsonsAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/brainParkinsonsAffyData.Rmd)
-* [brainLiverAffyData]()
-* [lungCancerAffyData]()
-* [breastCancerAffyData]()
-* [prostateCancerAffyData]()
-* [thyroidCancerAffyData]()
-* [stomachCancerAffyData]()
-* [liverCancerAffyData]()
 * [liverNAFLDAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/liverNAFLDAffyData.Rmd)
 * [mycAffyData](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/mycAffyData.Rmd)
+* [Tumor/Normal examples](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/geneExpression/otherFiles.Rmd)
+
 
 DNA methylation (Microarrays)
 
