@@ -5,14 +5,13 @@ Analysis of `lungCOPDAffyData`
 ```{r, message=FALSE}
 library(affy)
 library(oligo)
-library(gplots)
 library(quantro)
 library(doParallel)
 registerDoParallel(cores=20)
 ```
 
 ### Create `lungCOPDAffyData` data set
-```{r, message=FALSE}
+```{r, message=FALSE, eval=FALSE}
 library(GEOquery)
 library(pd.hugene.1.0.st.v1)
 gds <- getGEO("GSE37147")
@@ -37,10 +36,18 @@ pd$medsInhaled <- ifelse(pd$characteristics_ch1.10 == "inhaled medications: no",
 pd <- pd[!is.na(pd$COPD),]
 pd$COPD <- factor(pd$COPD, levels = c("COPD", "No COPD"))
 pData(lungCOPDAffyData) <- pd
+
+# Save MethylSet
+save(lungCOPDAffyData, file="../../data/lungCOPDAffyData.rda")
 ```
 
-Subset phenoDat dataframe columns
+### Load `lungCOPDAffyData`
+Load `affyBatch` object and subset phenoDat dataframe columns
 ```{r}
+library(lungCOPDAffyData)
+data(lungCOPDAffyData)
+
+pd <- pData(lungCOPDAffyData)
 pd <- pd[,c(1:5,8:11, 45:50)]
 pd$Group <- pd$COPD
 head(pd)
