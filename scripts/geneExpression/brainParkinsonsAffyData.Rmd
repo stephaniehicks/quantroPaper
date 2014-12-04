@@ -1,0 +1,85 @@
+Analysis of `brainParkinsonsAffyData`
+========================================================
+
+### Load libraries
+```{r, message=FALSE}
+library(affy)
+library(quantro)
+library(doParallel)
+registerDoParallel(cores=20)
+```
+
+### Create `brainParkinsonsAffyData` data set
+```{r, message=FALSE}
+library(GEOquery)
+gds <- getGEO("GSE19587")
+
+setwd("~/Downloads/GSE19587_RAW")
+rawFiles <- as.character(pData(gds[[1]])$supplementary_file)
+filePath <- sapply(1:length(rawFiles), function(x){ substring(rawFiles[x], 73) })
+
+# Read in CEL files
+brainParkinsonsAffyData <- ReadAffy()
+pData(brainParkinsonsAffyData) <- pData(gds[[1]])
+
+# Create phenoData
+pd <- pData(brainParkinsonsAffyData)
+rawFiles <- as.character(pd$supplementary_file)
+pd <- pd[,c(1,2,12,13,14)]
+
+pd$subject <- as.factor(rep(1:11, each = 2))
+pd$brainregion <- as.factor(rep(c("DMNV", "ION"), 11))
+pd$outcome <- as.factor(c(rep("control", 8), rep("parkinsons", 12), rep("control", 2)))
+pd$Sample_Name <- sapply(1:length(rawFiles), function(x){ substring(rawFiles[x], 83)})
+pData(brainParkinsonsAffyData) <- pd
+```
+
+### Extract the PM values
+```{r}
+pmMat <- pm(brainParkinsonsAffyData)
+```
+
+
+Density and boxplots of the raw PM values (Controls only)
+```{r}
+pd$Group <- as.factor(sapply(1:nrow(pd), function(x){
+  paste(pd$outcome[x], pd$brainregion[x], sep="_")
+}))
+pdControl <- pd[which(pd$outcome == "control"),]
+pdControl$Group <- factor(pdControl$Group)
+pmMatControl <- pmMat[,which(pd$outcome == "control")]
+
+log2pmMatControl <- log2(pmMatControl)
+matdensity(log2pmMatControl, groupFactor = pdControl$Group, col = 2:3, 
+           expression("log"[2]~"PM values"), ylab = "density" )
+matboxplot(log2pmMatControl, groupFactor = pdControl$Group, col = 2:3, 
+           ylab = expression("log"[2]~"PM values"))
+```
+
+
+Density and boxplots of the raw PM values (Parkinson's only)
+```{r}
+pd$Group <- as.factor(sapply(1:nrow(pd), function(x){
+  paste(pd$outcome[x], pd$brainregion[x], sep="_")
+}))
+pdPark <- pd[which(pd$outcome == "parkinsons"),]
+pdPark$Group <- factor(pdPark$Group)
+pmMatPark <- pmMat[,which(pd$outcome == "parkinsons")]
+
+log2pmMatPark <- log2(pmMatPark)
+matdensity(log2pmMatPark, groupFactor = pdPark$Group, col = 2:3, 
+           expression("log"[2]~"PM values"), ylab = "density" )
+matboxplot(log2pmMatPark, groupFactor = pdPark$Group, col = 2:3, 
+           ylab = expression("log"[2]~"PM values"))
+```
+
+
+
+### Testing for global differences
+```{r}
+quantro(pmMatControl, groupFactor = pdControl$Group, B=1000)
+```
+
+```{r}
+quantro(pmMatPark, groupFactor = pdPark$Group, B=1000)
+```
