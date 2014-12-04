@@ -69,4 +69,3 @@ In this section, we perform several Monte Carlo simulation studies to assess the
 * [Script for Supplementary Figure 23](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/quantroSimStudy/FDR.R): False discovery plots
 * [Script for Supplementary Figure 24](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/quantroSimStudy/ROC.R): ROC curves
 * [Helper functions needed for simulation studies](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/quantroSimStudy/quantro-functions.R)
-* [Helper functions needed for simulation studies](https://github.com/stephaniehicks/quantroPaper/blob/master/scripts/quantroSimStudy/quantro-functions.R)
